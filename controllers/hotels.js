@@ -100,9 +100,14 @@ exports.getHotel = async(req, res, next) => {
 //@desc Create a hotel
 //@route POST /api/v1/hotels
 //@acess Private
-exports.createHotel= async(reg,res,next)=>{
-    const hotel = await Hotel.create(reg.body);
-    res.status(201).json({success: true , data: hotel});
+exports.createHotel = async(req, res, next) => {
+    try{
+        const hotel = await Hotel.create(req.body);
+        res.status(201).json({success: true, data: hotel});
+    } catch(err){
+        console.log(err.stack);
+        return res.status(400).json({success: false, message: err.message});
+    }
 };
 
 //@desc Update single hotel

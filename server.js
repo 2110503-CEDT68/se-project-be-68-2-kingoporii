@@ -24,11 +24,16 @@ const app = express();
 //add cookie parser
 app.use(cookieParser());
 
-// CORS for frontend dev
+// CORS - allow configured frontend origin (or localhost for local dev)
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000').split(',');
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  const origin = req.headers.origin;
+  if (!origin || allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin || allowedOrigins[0]);
+  }
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
@@ -56,8 +61,7 @@ const server = app.listen(PORT, () => {
 });
 
 //Handle unhandled promise rejections
-process.on('unhandledRejection', (err,promise)=>{
-    console.log(`Error: ${err.message}`);
-    //Close server & exit process
-    server.close(()=>process.exit(1));
-})
+process.on('unhandledRejection', (err, promise) => {
+    console.log(`Unhandled Rejection: ${err.message}`);
+    // Do NOT call process.exit() on Vercel - it kills the serverless function
+});

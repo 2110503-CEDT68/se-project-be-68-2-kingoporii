@@ -1,6 +1,6 @@
 // controllers/roomservices.js
 
-const RoomService = require("../models/RoomService");
+const RoomService = require("../models/Roomservice");
 const Booking = require("../models/Booking");
 const Hotel = require("../models/Hotel");
 
