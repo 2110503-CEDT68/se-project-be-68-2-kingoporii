@@ -115,7 +115,7 @@ exports.addBooking = async(req, res, next) => {
         if (req.body.services && Array.isArray(req.body.services)) {
             req.body.services = req.body.services.map((s) => ({
                 service: s.serviceId,
-                quantity: s.quantity,
+                count: s.quantity,
                 status: 'pending'
             }));
         } else {
@@ -176,7 +176,7 @@ exports.updateBooking = async(req, res, next) => {
         if (req.body.services && Array.isArray(req.body.services)) {
             req.body.services = req.body.services.map((s) => ({
                 service: s.serviceId,
-                quantity: s.quantity,
+                count: s.quantity,
                 status: 'pending'
             }));
         }
