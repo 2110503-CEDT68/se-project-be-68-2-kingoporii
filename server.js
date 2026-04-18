@@ -1,3 +1,5 @@
+const { setServers } = require("node:dns/promises");
+setServers(["1.1.1.1", "8.8.8.8"]);
 const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser=require("cookie-parser");
@@ -16,6 +18,7 @@ const bookings = require('./routes/bookings');
 const users = require('./routes/users');
 const ratings = require('./routes/ratings');
 const reviews = require('./routes/reviews');
+const roomservices = require('./routes/roomservices');
 
 const app = express();
 
@@ -32,6 +35,7 @@ app.use('/api/v1/bookings', bookings);
 app.use('/api/v1/users',users);
 app.use('/api/v1/ratings', ratings);
 app.use('/api/v1/reviews', reviews);
+app.use('/api/v1/roomservices', roomservices);
 
 //Extend Parser
 app.set('query parser', 'extended');
