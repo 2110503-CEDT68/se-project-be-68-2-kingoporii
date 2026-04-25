@@ -1,6 +1,7 @@
 const Booking = require('../models/Booking');
 const Hotel = require('../models/Hotel');
 const Review = require('../models/Review');
+const RoomService = require('../models/Roomservice');
 
 //@desc Get all bookings
 //@route Get /api/v1/bookings
@@ -114,10 +115,14 @@ exports.addBooking = async(req, res, next) => {
 
         // Handle services array - store selected service refs with a booking-specific status
         if (req.body.services && Array.isArray(req.body.services)) {
+            const serviceIds = req.body.services.map(s => s.serviceId);
+            const validServices = await RoomService.find({ _id: { $in: serviceIds }, status: 'available' });
+            const validServiceIds = validServices.map(s => s._id.toString());
+
             req.body.services = req.body.services.map((s) => ({
                 service: s.serviceId,
                 count: s.quantity,
-                status: 'pending'
+                status: validServiceIds.includes(s.serviceId.toString()) ? 'pending' : 'cancelled'
             }));
         } else {
             req.body.services = [];
@@ -175,10 +180,14 @@ exports.updateBooking = async(req, res, next) => {
         }
 
         if (req.body.services && Array.isArray(req.body.services)) {
+            const serviceIds = req.body.services.map(s => s.serviceId);
+            const validServices = await RoomService.find({ _id: { $in: serviceIds }, status: 'available' });
+            const validServiceIds = validServices.map(s => s._id.toString());
+
             req.body.services = req.body.services.map((s) => ({
                 service: s.serviceId,
                 count: s.quantity,
-                status: 'pending'
+                status: validServiceIds.includes(s.serviceId.toString()) ? 'pending' : 'cancelled'
             }));
         }
 

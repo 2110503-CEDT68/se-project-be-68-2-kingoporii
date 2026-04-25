@@ -106,6 +106,14 @@ exports.updateRoomService = async (req, res) => {
       return res.status(404).json({ success: false, message: "Not found" });
     }
 
+    // If the service is no longer 'available', mark it as 'cancelled' in all existing bookings
+    if (status && status !== 'available') {
+      await Booking.updateMany(
+        { 'services.service': req.params.id },
+        { $set: { 'services.$.status': 'cancelled' } }
+      );
+    }
+
     res.status(200).json({ success: true, data: service });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });

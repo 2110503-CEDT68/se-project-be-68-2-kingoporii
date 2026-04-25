@@ -23,7 +23,7 @@ const RoomServiceSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ['available', 'pending', 'unavailable'],
+    enum: ['available', 'pending'],
     default: 'available',
     index: true
   },
