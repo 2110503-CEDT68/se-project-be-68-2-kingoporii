@@ -4,6 +4,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser=require("cookie-parser");
 const connectDB = require('./config/db');
+const mongoSanitize=require('express-mongo-sanitize');
 
 // Load env vars
 dotenv.config({ path: './config/config.env' });
@@ -24,6 +25,7 @@ const app = express();
 //add cookie parser
 app.use(cookieParser());
 
+
 // CORS - allow configured frontend origin (or localhost for local dev)
 const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000').split(',');
 app.use((req, res, next) => {
@@ -42,6 +44,9 @@ app.use((req, res, next) => {
 
 //add body parser
 app.use(express.json());
+
+//sanitize sql injection
+app.use(mongoSanitize());
 
 //Mount routers
 app.use('/api/v1/hotels', hotels);
